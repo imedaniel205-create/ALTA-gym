@@ -1,28 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
+import './stage2.css';
 
 const navItems = [['Club','#club'],['Training','#train'],['Wellness','#wellness'],['Membership','#membership']];
-
 function Logo(){return <a className="logo" href="#top" aria-label="ALTA home">ALTA<span className="logo-mark" aria-hidden="true">/</span></a>}
-function Header(){
- const [menuOpen,setMenuOpen]=useState(false); const menuButtonRef=useRef(null);
- useEffect(()=>{const f=e=>{if(e.key==='Escape'&&menuOpen){setMenuOpen(false);menuButtonRef.current?.focus()}};window.addEventListener('keydown',f);return()=>window.removeEventListener('keydown',f)},[menuOpen]);
- return <header className="site-header"><div className="container header-inner"><Logo/><nav className="desktop-nav" aria-label="Primary navigation">{navItems.map(([label,href])=><a href={href} key={label}>{label}</a>)}</nav><a className="button button--header" href="#cta">Book a free trial</a><button ref={menuButtonRef} className="menu-button" type="button" aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={()=>setMenuOpen(!menuOpen)}><span className="sr-only">{menuOpen?'Close menu':'Open menu'}</span><span className="menu-lines" aria-hidden="true"><i/><i/></span></button></div><div id="mobile-navigation" className={`mobile-nav ${menuOpen?'is-open':''}`}><nav aria-label="Mobile navigation">{navItems.map(([label,href])=><a href={href} key={label} onClick={()=>setMenuOpen(false)}>{label}</a>)}<a className="button button--light" href="#cta" onClick={()=>setMenuOpen(false)}>Book a free trial</a></nav></div></header>
-}
+function Header(){const [menuOpen,setMenuOpen]=useState(false);const menuButtonRef=useRef(null);useEffect(()=>{const f=e=>{if(e.key==='Escape'&&menuOpen){setMenuOpen(false);menuButtonRef.current?.focus()}};window.addEventListener('keydown',f);return()=>window.removeEventListener('keydown',f)},[menuOpen]);return <header className="site-header"><div className="container header-inner"><Logo/><nav className="desktop-nav" aria-label="Primary navigation">{navItems.map(([label,href])=><a href={href} key={label}>{label}</a>)}</nav><a className="button button--header" href="#cta">Book a free trial</a><button ref={menuButtonRef} className="menu-button" type="button" aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={()=>setMenuOpen(!menuOpen)}><span className="sr-only">{menuOpen?'Close menu':'Open menu'}</span><span className="menu-lines" aria-hidden="true"><i/><i/></span></button></div><div id="mobile-navigation" className={`mobile-nav ${menuOpen?'is-open':''}`}><nav aria-label="Mobile navigation">{navItems.map(([label,href])=><a href={href} key={label} onClick={()=>setMenuOpen(false)}>{label}</a>)}<a className="button button--light" href="#cta" onClick={()=>setMenuOpen(false)}>Book a free trial</a></nav></div></header>}
 function Button({children,variant='primary',href='#cta'}){return <a className={`button button--${variant}`} href={href}>{children}</a>}
-const images={
- hero:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=2200&q=85',
- train:'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=1800&q=85',
- recover:'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=85',
- membership:'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1600&q=85',
- floor:'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?auto=format&fit=crop&w=1500&q=85',
- reception:'https://images.unsplash.com/photo-1593079831268-3381b0db4a77?auto=format&fit=crop&w=1200&q=85',
- lounge:'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?auto=format&fit=crop&w=1200&q=85',
- coaching:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1600&q=80',
- wellness:'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1800&q=85',
- lagos:'https://images.unsplash.com/photo-1569098644584-210bcd375b59?auto=format&fit=crop&w=1800&q=85'
-};
+const images={hero:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=2200&q=85',train:'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=1800&q=85',recover:'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=85',membership:'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1600&q=85',floor:'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?auto=format&fit=crop&w=1500&q=85',reception:'https://images.unsplash.com/photo-1593079831268-3381b0db4a77?auto=format&fit=crop&w=1200&q=85',lounge:'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?auto=format&fit=crop&w=1200&q=85',coaching:'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1600&q=85',wellness:'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1800&q=85',lagos:'https://images.unsplash.com/photo-1569098644584-210bcd375b59?auto=format&fit=crop&w=1800&q=85'};
 function ImageFrame({src,alt,variant='landscape',className=''}){return <div className={`image-frame image-frame--${variant} ${className}`}><img src={src} alt={alt} loading="lazy"/></div>}
 function SectionIntro({eyebrow,title,children,dark=false}){return <div className={`section-intro ${dark?'section-intro--dark':''}`}><span className="eyebrow">{eyebrow}</span><h2>{title}</h2>{children&&<div className="section-intro__body">{children}</div>}</div>}
 function Hero(){return <section className="hero" aria-labelledby="hero-title"><ImageFrame src={images.hero} alt="Athlete training in a refined modern fitness space" variant="hero" className="hero__image"/><div className="hero__overlay"/><div className="container hero__content"><span className="eyebrow">ALTA · LAGOS</span><h1 id="hero-title">ELEVATE<br/>YOUR EVERYDAY.</h1><p>A premium fitness and wellness club designed for modern Lagos.</p><div className="hero__actions"><Button>Book a free trial</Button><Button variant="light">Explore the club</Button></div></div></section>}
