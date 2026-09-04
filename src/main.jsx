@@ -2,165 +2,39 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
-const navItems = ['Club', 'Training', 'Wellness'];
+const navItems = [['Club','#club'],['Training','#train'],['Wellness','#wellness'],['Membership','#membership']];
 
-function Logo() {
-  return (
-    <a className="logo" href="#top" aria-label="ALTA home">
-      ALTA<span className="logo-mark" aria-hidden="true">/</span>
-    </a>
-  );
+function Logo(){return <a className="logo" href="#top" aria-label="ALTA home">ALTA<span className="logo-mark" aria-hidden="true">/</span></a>}
+function Header(){
+ const [menuOpen,setMenuOpen]=useState(false); const menuButtonRef=useRef(null);
+ useEffect(()=>{const f=e=>{if(e.key==='Escape'&&menuOpen){setMenuOpen(false);menuButtonRef.current?.focus()}};window.addEventListener('keydown',f);return()=>window.removeEventListener('keydown',f)},[menuOpen]);
+ return <header className="site-header"><div className="container header-inner"><Logo/><nav className="desktop-nav" aria-label="Primary navigation">{navItems.map(([label,href])=><a href={href} key={label}>{label}</a>)}</nav><a className="button button--header" href="#cta">Book a free trial</a><button ref={menuButtonRef} className="menu-button" type="button" aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={()=>setMenuOpen(!menuOpen)}><span className="sr-only">{menuOpen?'Close menu':'Open menu'}</span><span className="menu-lines" aria-hidden="true"><i/><i/></span></button></div><div id="mobile-navigation" className={`mobile-nav ${menuOpen?'is-open':''}`}><nav aria-label="Mobile navigation">{navItems.map(([label,href])=><a href={href} key={label} onClick={()=>setMenuOpen(false)}>{label}</a>)}<a className="button button--light" href="#cta" onClick={()=>setMenuOpen(false)}>Book a free trial</a></nav></div></header>
 }
-
-function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuButtonRef = useRef(null);
-
-  useEffect(() => {
-    const onKeyDown = (event) => {
-      if (event.key === 'Escape' && menuOpen) {
-        setMenuOpen(false);
-        menuButtonRef.current?.focus();
-      }
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [menuOpen]);
-
-  return (
-    <header className="site-header">
-      <div className="container header-inner">
-        <Logo />
-        <nav className="desktop-nav" aria-label="Primary navigation">
-          {navItems.map((item) => <a href={`#${item.toLowerCase()}`} key={item}>{item}</a>)}
-        </nav>
-        <a className="button button--header" href="#cta">Book a free trial</a>
-        <button
-          ref={menuButtonRef}
-          className="menu-button"
-          type="button"
-          aria-expanded={menuOpen}
-          aria-controls="mobile-navigation"
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          <span className="sr-only">{menuOpen ? 'Close menu' : 'Open menu'}</span>
-          <span className="menu-lines" aria-hidden="true"><i /><i /></span>
-        </button>
-      </div>
-      <div id="mobile-navigation" className={`mobile-nav ${menuOpen ? 'is-open' : ''}`}>
-        <nav aria-label="Mobile navigation">
-          {navItems.map((item) => <a href={`#${item.toLowerCase()}`} key={item} onClick={() => setMenuOpen(false)}>{item}</a>)}
-          <a className="button button--light" href="#cta" onClick={() => setMenuOpen(false)}>Book a free trial</a>
-        </nav>
-      </div>
-    </header>
-  );
-}
-
-function Button({ children, variant = 'primary', href = '#cta' }) {
-  return <a className={`button button--${variant}`} href={href}>{children}</a>;
-}
-
-function TypeScale() {
-  return (
-    <section className="preview-section" aria-labelledby="type-title">
-      <div className="container">
-        <div className="section-heading">
-          <span className="eyebrow">02 / Typography</span>
-          <h2 id="type-title">A clear, architectural hierarchy.</h2>
-        </div>
-        <div className="type-grid">
-          <div><span className="type-label">Display</span><p className="display">Elevate<br />your everyday.</p></div>
-          <div className="type-samples">
-            <div><span className="type-label">H2 / H3</span><h3>Training with intention.</h3></div>
-            <div><span className="type-label">Body</span><p className="body-large">A considered environment for training, recovery and wellness in Lagos.</p></div>
-            <div><span className="type-label">Eyebrow / Metadata</span><p className="eyebrow">Lagos / Nigeria / 06:30 — 22:00</p></div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ColorTokens() {
-  const colors = [
-    ['Obsidian', 'var(--color-obsidian)', '#111111'],
-    ['Graphite', 'var(--color-graphite)', '#1C1C1A'],
-    ['Warm Ivory', 'var(--color-ivory)', '#F1EEE7'],
-    ['Stone', 'var(--color-stone)', '#C8C1B5'],
-    ['Muted Bronze', 'var(--color-bronze)', '#9C8565'],
-  ];
-  return (
-    <section className="preview-section preview-section--dark" aria-labelledby="color-title">
-      <div className="container">
-        <div className="section-heading section-heading--dark">
-          <span className="eyebrow">01 / Color system</span>
-          <h2 id="color-title">Quiet contrast. Warm restraint.</h2>
-        </div>
-        <div className="swatches">
-          {colors.map(([name, variable, hex]) => <div className="swatch" key={name} style={{ background: variable }}><span>{name}</span><small>{hex}</small></div>)}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Components() {
-  return (
-    <section className="preview-section" aria-labelledby="components-title">
-      <div className="container">
-        <div className="section-heading">
-          <span className="eyebrow">03 / Components</span>
-          <h2 id="components-title">Built once. Used consistently.</h2>
-        </div>
-        <div className="component-grid">
-          <div className="component-card">
-            <span className="type-label">Buttons</span>
-            <div className="button-row"><Button>Book a free trial</Button><Button variant="secondary">Explore the club</Button></div>
-          </div>
-          <div className="component-card component-card--dark">
-            <span className="type-label">Dark surface</span>
-            <p>Train. Recover. Elevate.</p>
-            <Button variant="light">Explore the club</Button>
-          </div>
-          <div className="component-card component-card--image" aria-label="Reserved image surface demonstrating the image system">
-            <div className="image-placeholder"><span className="eyebrow">Image system</span><strong>Hero / Landscape / Portrait / Square</strong></div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function App() {
-  return (
-    <div id="top">
-      <Header />
-      <main>
-        <section className="foundation-intro" aria-labelledby="foundation-title">
-          <div className="container intro-grid">
-            <div>
-              <span className="eyebrow">ALTA / Design Foundation / Stage 01</span>
-              <h1 id="foundation-title">Train.<br />Recover.<br /><em>Elevate.</em></h1>
-            </div>
-            <div className="intro-copy">
-              <p className="body-large">A premium visual system for a modern fitness and wellness club in Lagos.</p>
-              <p>Spacing, typography, surfaces, controls and responsive behavior are established here before page content is introduced.</p>
-            </div>
-          </div>
-        </section>
-        <ColorTokens />
-        <TypeScale />
-        <Components />
-        <section className="foundation-footer" id="cta" aria-label="Foundation status">
-          <div className="container footer-grid">
-            <div><span className="eyebrow">ALTA / Stage 01</span><h2>Elevate your everyday.</h2></div>
-            <div><p>Foundation preview — no homepage content introduced.</p><span className="status">System ready <i aria-hidden="true" /></span></div>
-          </div>
-        </section>
-      </main>
-    </div>
-  );
-}
-
-createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);
+function Button({children,variant='primary',href='#cta'}){return <a className={`button button--${variant}`} href={href}>{children}</a>}
+const images={
+ hero:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=2200&q=85',
+ train:'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=1800&q=85',
+ recover:'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1600&q=85',
+ membership:'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1600&q=85',
+ floor:'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?auto=format&fit=crop&w=1500&q=85',
+ reception:'https://images.unsplash.com/photo-1593079831268-3381b0db4a77?auto=format&fit=crop&w=1200&q=85',
+ lounge:'https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?auto=format&fit=crop&w=1200&q=85',
+ coaching:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1600&q=80',
+ wellness:'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1800&q=85',
+ lagos:'https://images.unsplash.com/photo-1569098644584-210bcd375b59?auto=format&fit=crop&w=1800&q=85'
+};
+function ImageFrame({src,alt,variant='landscape',className=''}){return <div className={`image-frame image-frame--${variant} ${className}`}><img src={src} alt={alt} loading="lazy"/></div>}
+function SectionIntro({eyebrow,title,children,dark=false}){return <div className={`section-intro ${dark?'section-intro--dark':''}`}><span className="eyebrow">{eyebrow}</span><h2>{title}</h2>{children&&<div className="section-intro__body">{children}</div>}</div>}
+function Hero(){return <section className="hero" aria-labelledby="hero-title"><ImageFrame src={images.hero} alt="Athlete training in a refined modern fitness space" variant="hero" className="hero__image"/><div className="hero__overlay"/><div className="container hero__content"><span className="eyebrow">ALTA · LAGOS</span><h1 id="hero-title">ELEVATE<br/>YOUR EVERYDAY.</h1><p>A premium fitness and wellness club designed for modern Lagos.</p><div className="hero__actions"><Button>Book a free trial</Button><Button variant="light">Explore the club</Button></div></div></section>}
+function Experience(){const pillars=[['TRAIN','Strength. Conditioning. Performance.'],['RECOVER','Mobility. Sauna. Restoration.'],['LIVE','Nutrition. Community. Wellbeing.']];return <section className="experience section-light" aria-labelledby="experience-title"><div className="container"><SectionIntro eyebrow="THE ALTA EXPERIENCE" title="MORE THAN A WORKOUT."><p id="experience-title">ALTA brings training, recovery and wellness together in one considered environment. A place to build strength, restore balance and make better health part of everyday life.</p></SectionIntro><div className="pillar-list">{pillars.map(([title,text],i)=><article className="pillar" key={title}><span className="pillar__number">0{i+1}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div></div></section>}
+function Train(){const items=['Strength Training','Cardio','Functional Training','Personal Training','Sports Conditioning'];return <section id="train" className="train section-dark" aria-labelledby="train-title"><div className="container split-section"><div className="split-section__visual"><ImageFrame src={images.train} alt="Athlete performing strength training" variant="portrait"/></div><div className="split-section__content"><span className="eyebrow">01 / TRAIN</span><h2 id="train-title">TRAIN WITH PURPOSE.</h2><p>From strength and conditioning to functional movement and personal coaching, every session is designed to move you closer to your goals.</p><ul className="feature-list">{items.map(x=><li key={x}>{x}</li>)}</ul><Button variant="light" href="#coaching">Explore training <span aria-hidden="true">→</span></Button></div></div></section>}
+function Recover(){const items=['Sauna','Mobility','Recovery','Wellness'];return <section id="recover" className="recover section-warm" aria-labelledby="recover-title"><div className="container split-section split-section--reverse"><div className="split-section__visual"><ImageFrame src={images.recover} alt="Warm, calm wellness and recovery environment" variant="landscape"/></div><div className="split-section__content"><span className="eyebrow">02 / RECOVER</span><h2 id="recover-title">RECOVERY IS PART OF THE TRAINING.</h2><p>Performance doesn't end when the workout does. ALTA gives you space to recover, restore and return stronger.</p><ul className="feature-list feature-list--warm">{items.map(x=><li key={x}>{x}</li>)}</ul><Button href="#wellness">Explore wellness <span aria-hidden="true">→</span></Button></div></div></section>}
+function Membership(){const tiers=[['ALTA ESSENTIAL','For consistent access to the club and core training facilities.'],['ALTA SIGNATURE','For a more complete training and wellness experience.'],['ALTA PRIVATE','For members seeking a more personalized experience.']];return <section id="membership" className="membership section-dark" aria-labelledby="membership-title"><div className="container"><SectionIntro eyebrow="MEMBERSHIP" title="FIND YOUR LEVEL." dark/><div className="membership-grid">{tiers.map(([title,text],i)=><article className={`membership-card ${i===1?'membership-card--featured':''}`} key={title}><span className="membership-card__index">0{i+1}</span><h3>{title}</h3><p>{text}</p><a href="#cta">View membership <span aria-hidden="true">→</span></a></article>)}</div><div className="membership-actions"><Button variant="light">View membership <span aria-hidden="true">→</span></Button><Button variant="secondary">Book a free trial <span aria-hidden="true">→</span></Button></div></div></section>}
+function Club(){return <section id="club" className="club section-image" aria-labelledby="club-title"><div className="container"><SectionIntro eyebrow="THE CLUB" title="DESIGNED TO MOVE YOU."><p>Every detail has been considered to make training feel as natural as living well.</p></SectionIntro><div className="club-gallery"><ImageFrame src={images.floor} alt="ALTA-style training floor" variant="landscape" className="club-gallery__large"/><ImageFrame src={images.reception} alt="Contemporary fitness club reception" variant="portrait"/><ImageFrame src={images.lounge} alt="Quiet club lounge" variant="square"/><div className="gallery-note"><span className="eyebrow">ALTA / THE CLUB</span><strong>Training floor · Reception · Lounge · Locker facilities · Wellness</strong></div></div><div className="club-cta"><Button>Explore the club <span aria-hidden="true">→</span></Button></div></div></section>}
+function Coaching(){const items=['Personal Training','Strength & Conditioning','Sports Performance','Movement & Mobility'];return <section id="coaching" className="coaching section-light" aria-labelledby="coaching-title"><div className="container split-section split-section--coaching"><div className="split-section__content"><span className="eyebrow">COACHING</span><h2 id="coaching-title">YOUR GOALS.<br/>YOUR PROGRAM.</h2><p>Work with experienced coaches who understand where you are, where you want to go and how to get you there.</p><ul className="feature-list">{items.map(x=><li key={x}>{x}</li>)}</ul><Button>Meet our coaches <span aria-hidden="true">→</span></Button></div><div className="split-section__visual"><ImageFrame src={images.coaching} alt="Coach guiding an athlete through training" variant="portrait"/></div></div></section>}
+function Wellness(){const items=['Nutrition','Recovery','Mobility','Sauna'];return <section id="wellness" className="wellness section-warm-dark" aria-labelledby="wellness-title"><div className="container wellness-layout"><div className="wellness-copy"><span className="eyebrow">03 / LIVE</span><h2 id="wellness-title">PERFORMANCE DOESN'T END AT THE GYM.</h2><p>Nutrition, recovery and movement work together. ALTA gives you the tools to build a healthier life beyond your training sessions.</p><a className="text-link text-link--light" href="#cta">Discover wellness <span aria-hidden="true">→</span></a></div><div className="wellness-visual"><ImageFrame src={images.wellness} alt="Calm wellness treatment space" variant="landscape"/></div><ul className="wellness-list">{items.map((x,i)=><li key={x}><span>0{i+1}</span>{x}</li>)}</ul></div></section>}
+function Lagos(){return <section className="lagos section-light" aria-labelledby="lagos-title"><div className="container lagos-grid"><div><span className="eyebrow">LAGOS</span><h2 id="lagos-title">BUILT FOR LAGOS.</h2><p>A considered fitness and wellness environment for people who move at the pace of the city.</p><div className="location-block"><strong>ALTA</strong><span>Lagos, Nigeria</span></div><div className="hours"><div><span>MON–FRI</span><strong>6:00 AM — 10:00 PM</strong></div><div><span>SAT–SUN</span><strong>7:00 AM — 8:00 PM</strong></div></div><Button>Get directions <span aria-hidden="true">→</span></Button></div><div className="map-frame"><iframe title="Map showing Lagos, Nigeria" src="https://www.openstreetmap.org/export/embed.html?bbox=3.25%2C6.38%2C3.55%2C6.62&layer=mapnik&marker=6.5244%2C3.3792" loading="lazy"/></div></div></section>}
+function FinalCta(){return <section id="cta" className="final-cta section-dark" aria-labelledby="cta-title"><div className="container final-cta__inner"><span className="eyebrow">ALTA · LAGOS</span><h2 id="cta-title">READY TO<br/>ELEVATE?</h2><p>Your first session starts here.</p><div className="final-cta__actions"><Button variant="light">Book a free trial <span aria-hidden="true">→</span></Button><Button variant="secondary">Explore the club</Button></div></div></section>}
+function Footer(){return <footer className="site-footer"><div className="container footer-main"><div><a className="footer-logo" href="#top">ALTA<span>/</span></a><p>Premium Fitness &amp; Wellness Club<br/>Lagos, Nigeria</p></div><div className="footer-links"><div><span className="footer-label">Explore</span>{[['The Club','#club'],['Training','#train'],['Wellness','#wellness'],['Membership','#membership'],['Coaching','#coaching']].map(([l,h])=><a href={h} key={l}>{l}</a>)}</div><div><span className="footer-label">Contact</span><a href="#">Instagram</a><a href="#">WhatsApp</a><a href="mailto:hello@alta.club">hello@alta.club</a></div><div><span className="footer-label">Legal</span><a href="#">Privacy</a><a href="#">Terms</a></div></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} ALTA</span><span>Train. Recover. Live.</span></div></footer>}
+function App(){return <div id="top"><Header/><main><Hero/><Experience/><Train/><Recover/><Membership/><Club/><Coaching/><Wellness/><Lagos/><FinalCta/></main><Footer/></div>}
+createRoot(document.getElementById('root')).render(<React.StrictMode><App/></React.StrictMode>);
