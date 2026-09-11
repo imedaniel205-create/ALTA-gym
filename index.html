@@ -10,5 +10,46 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      (() => {
+        const email = 'imedaniel205@gmail.com';
+        const whatsapp = '2348104750320';
+
+        const applyContactDetails = () => {
+          document.querySelectorAll('.site-footer').forEach((footer) => {
+            const emailLink = footer.querySelector('a[href^="mailto:"]');
+            if (emailLink) {
+              emailLink.href = `mailto:${email}`;
+              emailLink.textContent = email;
+            }
+
+            footer.querySelectorAll('.footer-link-placeholder').forEach((item) => {
+              const text = item.textContent.trim().toLowerCase();
+              if (text.includes('whatsapp')) {
+                const link = document.createElement('a');
+                link.className = 'footer-link';
+                link.href = `https://wa.me/${whatsapp}`;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.textContent = 'WhatsApp';
+                item.replaceWith(link);
+              }
+            });
+          });
+
+          document.querySelectorAll('.trial-contact').forEach((contact) => {
+            contact.querySelectorAll('span').forEach((item) => {
+              const text = item.textContent.trim().toLowerCase();
+              if (text.startsWith('email:')) item.textContent = `Email: ${email}`;
+              if (text.startsWith('whatsapp:')) item.textContent = `WhatsApp: ${email === 'imedaniel205@gmail.com' ? '08104750320' : whatsapp}`;
+            });
+          });
+        };
+
+        const observer = new MutationObserver(applyContactDetails);
+        observer.observe(document.getElementById('root'), { childList: true, subtree: true });
+        applyContactDetails();
+      })();
+    </script>
   </body>
 </html>
