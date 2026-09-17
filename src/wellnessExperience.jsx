@@ -131,6 +131,35 @@ function RoutineSection() {
   );
 }
 
+function ExistingWellnessContent() {
+  return (
+    <>
+      <section className="support-dark wellness-existing__nutrition">
+        <div className="container wellness-existing__split">
+          <div>
+            <span className="eyebrow">NUTRITION</span>
+            <h2>FUEL WHAT YOU'RE BUILDING.</h2>
+            <p className="body-large">Healthy habits support the work you put into training. ALTA's approach keeps nutrition practical, balanced and connected to everyday life.</p>
+          </div>
+          <div className="wellness-existing__note">
+            <span>PART OF THE BIGGER PICTURE</span>
+            <p>Training, recovery and everyday habits work best as one routine rather than separate priorities.</p>
+          </div>
+        </div>
+      </section>
+      <section className="support-light wellness-existing__balance">
+        <div className="container editorial">
+          <div>
+            <span className="eyebrow">THE BALANCE</span>
+            <h2>PERFORMANCE NEEDS SPACE.</h2>
+          </div>
+          <p className="body-large">Training. Recovery. Nutrition. Movement. The goal is not to choose one—it is to build a routine where each supports the others.</p>
+        </div>
+      </section>
+    </>
+  );
+}
+
 function FinalCta() {
   return (
     <section className="support-final wellness-experience__final">
@@ -157,6 +186,7 @@ export default function WellnessExperience() {
         <SaunaSection />
         <RecoverySpaces />
         <RoutineSection />
+        <ExistingWellnessContent />
         <FinalCta />
       </main>
       <Footer />
