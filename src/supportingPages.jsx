@@ -41,7 +41,7 @@ export function Trial(){return <><PageHero eyebrow="START HERE" title="YOUR FIRS
 function TrialForm(){
   const [status,setStatus]=useState('default');
   const [errors,setErrors]=useState({});
-  const endpoint=import.meta.env.VITE_ALTA_FORM_ENDPOINT;
+  const [processing,setProcessing]=useState(false);
 
   const validate=form=>{
     const data=new FormData(form);
@@ -55,8 +55,9 @@ function TrialForm(){
     return Object.keys(next).length===0;
   };
 
-  const submit=async e=>{
+  const submit=e=>{
     e.preventDefault();
+    if(processing)return;
     const form=e.currentTarget;
     setStatus('default');
     if(!validate(form)){
@@ -65,24 +66,39 @@ function TrialForm(){
       firstInvalid?.focus();
       return;
     }
-    if(!endpoint){
-      setStatus('error');
-      setErrors({form:'The trial form is not connected to a submission service yet. No request was sent.'});
-      return;
-    }
+    setProcessing(true);
     setStatus('loading');
     setErrors({});
-    try{
-      const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(form).entries()))});
-      if(!response.ok) throw new Error('Submission failed');
-      form.reset();
-      setStatus('success');
-    }catch{
+    const data=new FormData(form);
+    const name=[data.get('firstName'),data.get('lastName')].map(value=>String(value||'').trim()).filter(Boolean).join(' ');
+    const lines=[
+      'Hello ALTA,',
+      '',
+      "I'd like to book a free trial.",
+      '',
+      'Name: '+name,
+      'Email: '+String(data.get('email')||'').trim(),
+      'Phone: '+String(data.get('phone')||'').trim(),
+      'Preferred training option: '+String(data.get('interest')||'').trim(),
+      'Preferred date: '+String(data.get('visitDay')||'').trim(),
+      ...(String(data.get('message')||'').trim() ? ['Additional information: '+String(data.get('message')).trim()] : []),
+      '',
+      'Please let me know the next steps.',
+      '',
+      'Thank you.'
+    ];
+    const url='https://wa.me/2348104750320?text='+encodeURIComponent(lines.join('\n'));
+    const opened=window.open(url,'_blank','noopener,noreferrer');
+    if(!opened){
+      setProcessing(false);
       setStatus('error');
-      setErrors({form:'We could not send your request right now. Please try again.'});
+      setErrors({form:'Your browser blocked the WhatsApp window. Please allow pop-ups for this site and try again.'});
+      return;
     }
+    setStatus('success');
+    setProcessing(false);
+    setErrors({form:'Your booking request is ready in WhatsApp. Please review it and press Send to complete your request.'});
   };
-
   const field=(name,label,control,required=true)=><label htmlFor={`trial-${name}`}>{label}{required?' *':''}{React.cloneElement(control,{id:`trial-${name}`,required, 'aria-invalid':Boolean(errors[name]), 'aria-describedby':errors[name]?`trial-${name}-error`:undefined, onChange:()=>{if(errors[name]||errors.form){setErrors(current=>{const next={...current};delete next[name];delete next.form;return next})}}})}{errors[name]&&<span className="trial-form__error" id={`trial-${name}-error`}>{errors[name]}</span>}</label>;
 
   return <form className="trial-form" onSubmit={submit} noValidate aria-busy={status==='loading'}>
@@ -94,10 +110,10 @@ function TrialForm(){
     {field('visitDay','Preferred Visit Day',<input type="date" name="visitDay"/>) }
     {field('message','Message',<textarea name="message" rows="5"/>,false)}
     <div className="trial-form__status" role="status" aria-live="polite">
-      {status==='success'&&<><strong>THANK YOU.</strong><span>Your request has been received. We'll be in touch soon.</span></>}
-      {status==='error'&&errors.form&&<><strong>WE COULDN'T SEND THAT.</strong><span>{errors.form}</span></>}
+      {status==='success'&&<><strong>WHATSAPP MESSAGE READY.</strong><span>{errors.form}</span></>}
+      {status==='error'&&errors.form&&<><strong>PLEASE CHECK YOUR DETAILS.</strong><span>{errors.form}</span></>}
     </div>
-    <button className="button button--primary full" type="submit" disabled={status==='loading'}>{status==='loading'?'Sending request…':'Request a free trial'}</button>
+    <button className="button button--primary full" type="submit" disabled={processing||status==='loading'}>{status==='loading'?'Opening WhatsApp…':'Request a free trial'}</button>
   </form>;
 }
 export const pages={club:Club,training:Training,wellness:Wellness,membership:Membership,coaching:Coaching,trial:Trial};
