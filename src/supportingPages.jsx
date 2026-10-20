@@ -88,7 +88,7 @@ function TrialForm(){
       'Thank you.'
     ];
     const url='https://wa.me/2348104750320?text='+encodeURIComponent(lines.join('\n'));
-    const opened=window.open(url,'_blank','noopener,noreferrer');
+    const opened=window.open(url,'_blank');
     if(!opened){
       setProcessing(false);
       setStatus('error');
